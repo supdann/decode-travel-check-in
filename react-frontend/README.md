@@ -1,37 +1,32 @@
-# Web3Auth (`@web3auth/modal`) x EVM x React
+# SIWY React App
 
-[![Web3Auth](https://img.shields.io/badge/Web3Auth-SDK-blue)](https://web3auth.io/docs/sdk/pnp/web/modal)
-[![Web3Auth](https://img.shields.io/badge/Web3Auth-Community-cyan)](https://community.web3auth.io)
+This repository folder contains the frontend code submission for the Team07 (Has Left The Building) - SIWY.
 
-[Join our Community Portal](https://community.web3auth.io/) to get support and stay up to date with the latest news and updates.
+During the hackathon we have setup a React App MVP, that makes it possible for any user to create a wallet.
 
-This example demonstrates how to use Web3Auth with EVM in React.
+For the Wallet creation process, we have chosen to use Web3Auth, this makes it easy for anyone to signup using different methods and manage their cryptographic wallets.
 
-## How to Use
-
-### Download Manually
-
-```bash
-npx degit Web3Auth/web3auth-pnp-examples/web-modal-sdk/quick-starts/react-modal-quick-start w3a-example
-```
+## Initialize project
 
 Install & Run:
 
 ```bash
-cd w3a-example
 npm install
 npm run start
-# or
-cd w3a-example
-yarn
-yarn start
 ```
 
-## Important Links
+## How to use
 
-- [Website](https://web3auth.io)
-- [Docs](https://web3auth.io/docs)
-- [Guides](https://web3auth.io/docs/content-hub?type=guides)
-- [SDK / API References](https://web3auth.io/docs/sdk)
-- [Pricing](https://web3auth.io/pricing.html)
-- [Community Portal](https://community.web3auth.io)
+You can use the MVP of the SIWY App by starting the app as mentioned above.
+
+Once the App has started you should see a sign in / sign up screen, powered by web3auth.
+
+You should sign up on SIWY using your preferred authentication method, such as an email address or any social signing up options.
+
+Once you have signed up, you will be able to simulate a donation by tapping on the **Donate** Button.
+
+Donations require however a Signature which is normally provided by **the Hotel**. You can find some test_signatures in the test folder, otherwise you can have a look at the smart-contracts folder for more information on how to generate signatures.
+
+## License
+
+see LICENSE.
