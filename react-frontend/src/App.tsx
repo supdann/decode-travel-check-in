@@ -1,48 +1,51 @@
-// import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// Web3
+import Web3 from "web3";
+import { Web3Auth } from "@web3auth/modal";
+import { IProvider } from "@web3auth/base";
+
+// MUI
 import { Stack, Button, Box } from "@mui/material";
-import palmbackgound from "./assets/palm_bg.webp";
+
+// Assets & Styles
 import "./App.css";
 import ButtonStandart from "./components/ButtonStandart";
+import palmbackgound from "./assets/palm_bg.webp";
 import happylegs from "./assets/happy_legs.png";
 import happyhead from "./assets/happy_head.png";
 import ProgressBar from "./components/ProgressBar";
-import { useEffect, useState } from "react";
-import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
-import { CHAIN_NAMESPACES, IProvider } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import test_signatures from "./test/test_signatures.json";
+
+// Custom
 import { config } from "./config";
-import { bookingContractABI, bookingContractAddress } from "./utils/constants";
-// IMP END - Quick Start
-import Web3 from "web3";
-// import { SenderContext } from "./context/SenderContext";
+import {
+  bookingContractABI,
+  bookingContractAddress,
+  donationContractABI,
+  donationContractAddress,
+} from "./utils/constants";
 
-const chainConfig = {
-  chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x1f5",
-  rpcTarget: "https://columbus.camino.network/ext/bc/C/rpc",
-  blockExplorerUrl: "https://explorer.camino.foundation/",
-  displayName: "Columbus",
-  tickerName: "Camino",
-  ticker: "CAM",
+const web3auth = new Web3Auth(config.defaultWeb3AuthConfig);
+
+type Donation = {
+  sqm: number;
+  donator: string;
+  authorizer: string;
+  paid: boolean;
 };
 
-const privateKeyProvider = new EthereumPrivateKeyProvider({
-  config: { chainConfig: chainConfig },
-});
-
-const defaultWeb3AuthConfig: Web3AuthOptions = {
-  clientId: config.WEB3AUTH_CLIENT_ID,
-  web3AuthNetwork: "testnet",
-  useCoreKitKey: false,
-  chainConfig: chainConfig,
-  privateKeyProvider: privateKeyProvider,
+type Booking = {
+  guest: string;
+  bookingId: number;
 };
-
-const web3auth = new Web3Auth(defaultWeb3AuthConfig);
 
 function App() {
   // const { getAllBookings } = useContext(SenderContext);
+
+  const [donationsCount, setDonationsCount] = useState<number>(0);
+  const [bookingsCount, setBookingsCount] = useState<number>(0);
 
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -50,9 +53,7 @@ function App() {
   useEffect(() => {
     const init = async () => {
       try {
-        // IMP START - SDK Initialization
         await web3auth.initModal();
-        // IMP END - SDK Initialization
         setProvider(web3auth.provider);
 
         await getUserInfo();
@@ -65,13 +66,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("logged in", loggedIn);
+    console.log("Is logged in:", loggedIn);
   }, [loggedIn]);
 
   const logout = async () => {
-    // IMP START - Logout
     await web3auth.logout();
-    // IMP END - Logout
     setProvider(null);
     navigate("/login");
     setLoggedIn(false);
@@ -80,6 +79,67 @@ function App() {
 
   const navigate = useNavigate();
 
+  const makeADonation = async () => {
+    // Donation signature
+    let signature = undefined;
+    let donationId = undefined;
+
+    // Contract
+    let donationContract = undefined;
+
+    // Address
+    let address = undefined;
+
+    try {
+      if (!provider) {
+        console.log("Please install wallet software");
+        return;
+      }
+
+      const web3 = new Web3(provider);
+      address = (await web3.eth.getAccounts())[0];
+
+      donationContract = new web3.eth.Contract(
+        donationContractABI,
+        donationContractAddress
+      );
+    } catch (error) {
+      console.log("Error: Could not connect to the blockchain");
+      console.log(error);
+    }
+
+    if (!donationContract || !address) {
+      console.log("Error: Missing data");
+      return;
+    }
+
+    let test_signature_start_count = 0;
+    let success = false;
+
+    while (!success && test_signature_start_count < test_signatures.length) {
+      // Select a signature from the test_signatures.json file
+      signature = test_signatures[test_signature_start_count]["Signature"];
+      donationId = test_signatures[test_signature_start_count]["Namehash"];
+
+      // Try to donate if the test signature failed try the next one
+      try {
+        // Console log the test signature count
+        console.log(`Testing signature ${test_signature_start_count}`);
+
+        // Mint a new Donation NFT
+        await donationContract.methods
+          .donate(signature, address, "100", donationId, "")
+          .send({ from: address });
+
+        success = true;
+      } catch (error) {
+        console.log("Error: Could not donate");
+        console.log(error);
+        test_signature_start_count++;
+      }
+    }
+  };
+
   const getAllBookings = async () => {
     try {
       if (!provider) {
@@ -87,12 +147,11 @@ function App() {
         return;
       }
 
-      console.log("Es gibt einen Provider");
-
       const web3 = new Web3(provider);
 
       // Get user's Ethereum public address
       const address = (await web3.eth.getAccounts())[0];
+      console.log(`Address: ${address}`);
 
       // Get user's balance in ether
       const balance = web3.utils.fromWei(
@@ -102,23 +161,71 @@ function App() {
 
       console.log(`Balance: ${balance} CAM`);
 
-      // const signer = provider.getSigner();
-
-      const contract = bookingContractAddress;
-      const abi = bookingContractABI;
-
       // Creating the contract by passing :
       // - address of the deployed contract
       // - abi of the contract (imported from constants) (In order to retrieve the abi within)
+      const bookingsContract = new web3.eth.Contract(
+        bookingContractABI,
+        bookingContractAddress
+      );
 
-      const senderContract = new web3.eth.Contract(abi, contract);
-
-      // calling the getAllBookings() in our smart contract
-      const availableBookings = await senderContract.methods
+      // Calling the getAllBookings() in our smart contract
+      const availableBookings = await bookingsContract.methods
         .getAllBookings()
         .call();
 
-      console.log(availableBookings);
+      // Count the number of donations, check first if its a valid array
+      if (Array.isArray(availableBookings)) {
+        // Parse Booking objects
+        const bookings = availableBookings.map((booking: any) => {
+          const data = {
+            guest: booking.guest,
+            bookingId: booking.bookingId,
+          };
+          return data as Booking;
+        });
+        setBookingsCount(bookings.length);
+        console.log(availableBookings);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const listAllDonations = async () => {
+    try {
+      if (!provider) {
+        console.log("Please install wallet software");
+        return;
+      }
+
+      const web3 = new Web3(provider);
+
+      const donationContract = new web3.eth.Contract(
+        donationContractABI,
+        donationContractAddress
+      );
+
+      // calling the getAllDonations() in our smart contract
+      const availableDonations = await donationContract.methods
+        .getAllDonations()
+        .call();
+
+      // Count the number of donations, check first if its a valid array
+      if (Array.isArray(availableDonations)) {
+        // Parse Booking objects
+        const donations = availableDonations.map((booking: any) => {
+          const data = {
+            sqm: booking.sqm,
+            donator: booking.donator,
+            authorizer: booking.authorizer,
+            paid: booking.paid,
+          };
+          return data as Donation;
+        });
+
+        setDonationsCount(donations.length);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -154,9 +261,9 @@ function App() {
           height: "30px",
         }}
         onClick={logout}
-      ></Box>
+      />
       <ButtonStandart
-        onClick={() => navigate("/login")}
+        onClick={makeADonation}
         text="Donate"
         style={{
           width: "300px",
@@ -166,7 +273,12 @@ function App() {
           fontSize: "24px",
         }}
       ></ButtonStandart>
-      <Button onClick={getAllBookings}>GET ALL BOOKINGS</Button>
+      <Button onClick={getAllBookings}>
+        GET ALL BOOKINGS ({bookingsCount})
+      </Button>
+      <Button onClick={listAllDonations}>
+        GET ALL DONATIONS ({donationsCount})
+      </Button>
       <Stack
         sx={{
           position: "relative",

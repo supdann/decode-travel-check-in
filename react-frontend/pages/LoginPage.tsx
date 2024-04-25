@@ -10,7 +10,7 @@ import { CHAIN_NAMESPACES } from "@web3auth/base";
 import { Stack } from "@mui/material";
 
 // Assets
-import logo from "../assets/universal_logo.png";
+import logo from "../assets/logo.png";
 import palmbackgound from "../assets/palm_bg.webp";
 import happy from "../assets/happy.png";
 import ButtonStandart from "../components/ButtonStandart";
