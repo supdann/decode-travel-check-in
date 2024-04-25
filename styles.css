@@ -1,0 +1,9 @@
+:root {
+    /* Primary colors */
+    --primary-color: #006980; /* blue */
+    --primary-dark: #003A47;
+  
+    /* Secondary colors */
+    --secondary-color: #373737; /* gray */
+    --secondary-light: #FFFFFF;
+  }
