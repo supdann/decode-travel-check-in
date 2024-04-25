@@ -1,37 +1,15 @@
-# Web3Auth (`@web3auth/modal`) x EVM x React
+# Team 7 - Has Left The Building
 
-[![Web3Auth](https://img.shields.io/badge/Web3Auth-SDK-blue)](https://web3auth.io/docs/sdk/pnp/web/modal)
-[![Web3Auth](https://img.shields.io/badge/Web3Auth-Community-cyan)](https://community.web3auth.io)
+This project is structured into two main components: the frontend and the smart contracts. Below you'll find a brief overview of each part.
 
-[Join our Community Portal](https://community.web3auth.io/) to get support and stay up to date with the latest news and updates.
+## Structure
 
-This example demonstrates how to use Web3Auth with EVM in React.
+This repository is divided into two main folders:
 
-## How to Use
+- **`react-frontend`**: This folder contains all the frontend code of the application, built using React. For more details about the frontend, please refer to the [README](<ins>react-frontend/README.md</ins>) in the `react-frontend` folder.
 
-### Download Manually
+- **`smart-contracts`**: Here, you'll find the smart contracts that interact with the blockchain. To learn more about the smart contracts, visit the [README](<ins>smart-contracts/README.md</ins>) in the `smart-contracts` folder.
 
-```bash
-npx degit Web3Auth/web3auth-pnp-examples/web-modal-sdk/quick-starts/react-modal-quick-start w3a-example
-```
+## Getting Started
 
-Install & Run:
-
-```bash
-cd w3a-example
-npm install
-npm run start
-# or
-cd w3a-example
-yarn
-yarn start
-```
-
-## Important Links
-
-- [Website](https://web3auth.io)
-- [Docs](https://web3auth.io/docs)
-- [Guides](https://web3auth.io/docs/content-hub?type=guides)
-- [SDK / API References](https://web3auth.io/docs/sdk)
-- [Pricing](https://web3auth.io/pricing.html)
-- [Community Portal](https://community.web3auth.io)
+To get started with this project, you might want to explore each of the folders mentioned above. Each folder has its own README with specific instructions on how to set up and run the respective parts of the project.
