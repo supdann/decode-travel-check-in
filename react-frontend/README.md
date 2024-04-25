@@ -1,6 +1,6 @@
-# SIWY React App
+# SEWY React App
 
-This repository folder contains the frontend code submission for the Team07 (Has Left The Building) - SIWY.
+This repository folder contains the frontend code submission for the Team07 (Has Left The Building) - SEWY.
 
 During the hackathon we have setup a React App MVP, that makes it possible for any user to create a wallet.
 
@@ -17,11 +17,11 @@ npm run start
 
 ## How to use
 
-You can use the MVP of the SIWY App by starting the app as mentioned above.
+You can use the MVP of the SEWY App by starting the app as mentioned above.
 
 Once the App has started you should see a sign in / sign up screen, powered by web3auth.
 
-You should sign up on SIWY using your preferred authentication method, such as an email address or any social signing up options.
+You should sign up on SEWY using your preferred authentication method, such as an email address or any social signing up options.
 
 Once you have signed up, you will be able to simulate a donation by tapping on the **Donate** Button.
 
