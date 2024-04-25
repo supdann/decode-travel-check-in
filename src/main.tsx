@@ -1,14 +1,16 @@
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 
+// Providers
+// import { SenderProvider } from "./context/SenderContext";
+
 // MUI
 import { CssBaseline } from "@mui/material";
 
 // Pages
-import "./init"
+import "./init";
 import App from "./App.tsx";
 import RewardsPage from "./pages/Rewards.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
@@ -19,6 +21,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    {/* <SenderProvider> */}
     <CssBaseline />
     <BrowserRouter>
       <Routes>
@@ -28,5 +31,6 @@ root.render(
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
+    {/* </SenderProvider> */}
   </React.StrictMode>
 );
