@@ -1,0 +1,31 @@
+#root {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  width: 100dvw;
+}
+
+
+@keyframes dance {
+  0% {
+      transform: translateY(0);
+  }
+  50% {
+      transform: translateY(-10px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+
+.mascot {
+  animation: dance 1.8s infinite ease;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
