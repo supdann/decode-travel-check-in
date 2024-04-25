@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const NFT = await ethers.getContractFactory("NFT721");
+  const NFT = await ethers.getContractFactory("BookingNFT");
   const nft = await NFT.deploy();
 
   await nft.deployed();
 
-  console.log("NFT deployed to", nft.address);
+  console.log("POS smart contract deployed to", nft.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
